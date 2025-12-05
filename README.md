@@ -1,7 +1,3 @@
-# AWS 多账号控制面板（Flask 版）
-
-一个自部署的轻量面板，可在浏览器本地保存多个 AWS 账号配置，支持 SOCKS 代理检测、AK/SK 验证、生成临时控制台登录链接，以及基础的 EC2 / Lightsail 实例查看与控制。
-
 ## 目录结构
 ```
 backend/
@@ -81,24 +77,3 @@ server {
 sudo ln -s /etc/nginx/sites-available/aws-panel /etc/nginx/sites-enabled/aws-panel
 sudo nginx -t && sudo systemctl restart nginx
 ```
-
-访问：`http://your-server/`
-
-## 使用说明
-- **多配置管理**：左上角选择/新建/重命名/删除/保存配置。数据仅存储在浏览器 `localStorage`（key: `awsTempLinkProfiles`）。
-- **测试 SOCKS**：填写 `socks5://...` 代理地址，点击“测试 SOCKS”，后端通过代理访问 `ip-api.com`。
-- **测试 AWS 账号**：填写 AK/SK/Region（可选代理），调用 `sts.get_caller_identity` 验证有效性。
-- **生成临时登录链接**：填写会话时长（900–43200 秒），调用 `GetFederationToken` + federation URL，返回可直接打开的控制台登录链接。
-- **实例管理**：点击“加载实例”获取当前 Region 的 EC2 / Lightsail 列表。每行提供启动/停止/重启/换 IP 操作，操作前会弹出确认。
-
-## 常见错误提示
-- `密钥无效 / 权限不足`：AK/SK 无权限调用 STS 或实例操作，请检查 IAM 策略。
-- `Region 无效`：Region 拼写错误或账号未启用对应区域。
-- `代理不可用`：SOCKS 地址错误、网络不可达或认证失败，查看代理日志。
-- `STS 调用异常`：可能因时间同步问题、网络问题或凭证被吊销。
-
-## 可选环境变量
-- `FLASK_DEBUG`：设为 `1/true` 启用调试。
-- `DEFAULT_SESSION_DURATION`：控制默认会话时长（秒）。
-- `HTTP_TIMEOUT`：HTTP/代理测试超时（秒）。
-- `AWS_CONSOLE_DESTINATION`：控制台目标 URL，默认 `https://console.aws.amazon.com/`。

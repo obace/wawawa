@@ -77,3 +77,11 @@ server {
 sudo ln -s /etc/nginx/sites-available/aws-panel /etc/nginx/sites-enabled/aws-panel
 sudo nginx -t && sudo systemctl restart nginx
 ```
+### 一键
+sudo apt update && sudo apt install -y git python3-venv python3-pip && \
+cd /opt && \
+git clone https://github.com/obace/wawawa.git aws-panel && \
+cd aws-panel && \
+python3 -m venv venv && source venv/bin/activate && \
+pip install -r requirements.txt && \
+venv/bin/gunicorn -b 0.0.0.0:8000 --timeout 120 backend.app:app
